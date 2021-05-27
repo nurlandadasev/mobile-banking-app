@@ -13,10 +13,13 @@ import com.ma.mobilebankingapp.services.AccountService;
 import com.ma.mobilebankingapp.services.mappers.AccountMapper;
 import com.ma.mobilebankingapp.utilities.RandomNumber;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -60,18 +63,20 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto updateAccount(AccountDto accountDto) {
-        Account account = repoAccount.findById(accountDto.getIdAccount())
-                .orElseThrow(() -> new NotFoundException(String.format("Account not found by this id: %s", accountDto.getIdAccount())));
+    public AccountDto updateAccount(AccountRequest accountRequest) {
+        Account account = repoAccount.findById(accountRequest.getIdAccount())
+                .orElseThrow(() -> new NotFoundException(String.format("Account not found by this id: %s", accountRequest.getIdAccount())));
         BigDecimal balance = account.getBalance();
-        BigDecimal newBalance = balance.add(accountDto.getBalance());
+        BigDecimal newBalance = balance.add(accountRequest.getBalance());
         account.setBalance(newBalance);
         return AccountMapper.INSTANCE.mapToDto(account);
     }
 
     @Override
-    public List<AccountDto> getAccounts(Long idCustomer) {
-        List<Account> accountList = repoAccount.findAll();
-        return AccountMapper.INSTANCE.mapListToDtoList(accountList);
+    public ResponseEntity<List<AccountDto>> getAccounts(String customerUUID) {
+        Optional<List<Account>> accountList = repoAccount.findAccountsByCustomerUUID(customerUUID);
+
+        return accountList.map(accounts -> new ResponseEntity<>(AccountMapper.INSTANCE.mapListToDtoList(accounts), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null,HttpStatus.NO_CONTENT));
     }
 }

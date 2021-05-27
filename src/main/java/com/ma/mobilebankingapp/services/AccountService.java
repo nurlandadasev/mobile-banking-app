@@ -2,6 +2,7 @@ package com.ma.mobilebankingapp.services;
 
 import com.ma.mobilebankingapp.domain.dto.AccountDto;
 import com.ma.mobilebankingapp.domain.dto.AccountRequest;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public interface AccountService {
 
     void deleteAccount(long idAccount);
 
-    AccountDto updateAccount(AccountDto accountDto);
+    AccountDto updateAccount(AccountRequest accountRequest);
 
-    List<AccountDto> getAccounts(Long idCustomer);
+    ResponseEntity<List<AccountDto>> getAccounts(String customerUUID);
 
 
 }
