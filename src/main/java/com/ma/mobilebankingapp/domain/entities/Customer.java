@@ -49,8 +49,10 @@ public class Customer extends AbstractAudityEntity<String> {
     }
 
     @PrePersist
-    private void prePersist(){
-        this.customerUUID = UUID.randomUUID().toString().toUpperCase();
+    private void prePersist() {
+        if (customerUUID == null) {
+            this.customerUUID = UUID.randomUUID().toString().toUpperCase();
+        }
     }
 
 }

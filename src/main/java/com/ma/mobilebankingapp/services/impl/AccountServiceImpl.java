@@ -41,17 +41,18 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDto createAccount(AccountRequest accountRequest) {
         Account account = new Account();
-        account.setAccountNumber(createAndSaveAccountNumber());
+        account.setCustomer(validateCustomer(accountRequest.getCustomerUUID()));
         account.setBalance(accountRequest.getBalance());
         account.setCurrency(validateCurrency(accountRequest.getIdCurrency()));
-        account.setCustomer(validateCustomer(accountRequest.getIdCustomer()));
+        account.setAccountNumber(createAndSaveAccountNumber());
         repoAccount.save(account);
         return AccountMapper.INSTANCE.mapToDto(account);
     }
 
 
-    private Customer validateCustomer(long idCustomer) {
-        return repoCustomer.findById(idCustomer).orElseThrow(() -> new BadRequestException(String.format("Customer not found by this id: %s", idCustomer)));
+    private Customer validateCustomer(String customerUUID) {
+        return repoCustomer.findByCustomerUUID(customerUUID)
+                .orElseThrow(() -> new BadRequestException(String.format("Customer not found by this uuid: %s", customerUUID)));
     }
 
     private Currency validateCurrency(long idCurrency) {
@@ -78,7 +79,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = repoAccount.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new BadRequestException("Account not found."));
         if (account.isDeleted())
-            throw new BadRequestException("Unable to change the status of a deleted account");
+            throw new BadRequestException("Unable to change the status of a deleted account.");
         account.setActive(active);
         repoAccount.save(account);
     }
