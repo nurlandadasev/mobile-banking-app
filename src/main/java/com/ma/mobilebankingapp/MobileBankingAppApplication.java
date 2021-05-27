@@ -1,9 +1,7 @@
 package com.ma.mobilebankingapp;
 
-import com.ma.mobilebankingapp.domain.entities.Account;
 import com.ma.mobilebankingapp.domain.entities.Currency;
 import com.ma.mobilebankingapp.domain.entities.Customer;
-import com.ma.mobilebankingapp.domain.repo.RepoAccount;
 import com.ma.mobilebankingapp.domain.repo.RepoCurrency;
 import com.ma.mobilebankingapp.domain.repo.RepoCustomer;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,6 @@ public class MobileBankingAppApplication implements CommandLineRunner {
 
     private final RepoCurrency repoCurrency;
     private final RepoCustomer repoCustomer;
-    private final RepoAccount repoAccount;
 
 
     public static void main(String[] args) {
@@ -26,6 +23,7 @@ public class MobileBankingAppApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        //Create data for testing project.
         repoCurrency.save(Currency.builder().currency("EUR").build());
         repoCurrency.save(Currency.builder().currency("USD").build());
         repoCurrency.save(Currency.builder().currency("MDL").build());

@@ -9,6 +9,11 @@ spring:
     database-platform: org.hibernate.dialect.SQLServer2012Dialect
     hibernate:
       ddl-auto: create-drop
+  application:
+    name: mobile-banking-app
+  profiles:
+    include:
+      - logger
 
 
 
@@ -21,3 +26,6 @@ app:
     host: ${SERVICE_DB_HOST:localhost}
     schema: ${SERVICE_DB_SCHEMA:testShema}
     port: ${SERVICE_DB_PORT:1433}
+
+server:
+  port: 8080
