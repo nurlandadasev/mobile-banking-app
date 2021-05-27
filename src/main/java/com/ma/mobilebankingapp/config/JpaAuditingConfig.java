@@ -1,4 +1,4 @@
-package com.ma.mobilebankingapp.domain.config;
+package com.ma.mobilebankingapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

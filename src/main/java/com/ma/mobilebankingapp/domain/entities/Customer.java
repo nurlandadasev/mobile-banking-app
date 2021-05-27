@@ -18,7 +18,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Where(clause = "is_deleted=false")
-@SQLDelete(sql = "update customer set is_deleted=true where id=?")
+@SQLDelete(sql = "update customer set is_deleted=1 where id_customer=?")
 public class Customer extends AbstractAudityEntity<String> {
 
     @Id
@@ -37,6 +37,7 @@ public class Customer extends AbstractAudityEntity<String> {
 
     private boolean isDeleted;
 
+    @ToString.Exclude
     @JsonManagedReference
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<Account> accountList = new ArrayList<>();

@@ -5,10 +5,12 @@ import com.ma.mobilebankingapp.domain.dto.AccountRequest;
 import com.ma.mobilebankingapp.domain.dto.BalanceUpdateRequest;
 import com.ma.mobilebankingapp.services.impl.AccountServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -34,6 +36,18 @@ public class AccountController {
     @PutMapping("/{activeDeactivateAccount}/{active}")
     public void activeInactiveAccount(@PathVariable String activeDeactivateAccount,@PathVariable Boolean active){
         accountService.activeInactive(activeDeactivateAccount,active);
+    }
+
+
+
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<AccountDto>> getAccountsWithFiltering(@RequestParam(required = false) String customerUUID,
+                                                                     @RequestParam(required = false) List<Long> currencyIds,
+                                                                     @RequestParam(required = false) Boolean isActive,
+                                                                     @RequestParam(required = false) LocalDate startDate,
+                                                                     @RequestParam(required = false) LocalDate finishDate){
+    return accountService.getAccountsWithFiltering(customerUUID,currencyIds,isActive,startDate,finishDate);
     }
 
 

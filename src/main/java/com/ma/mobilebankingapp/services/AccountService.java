@@ -5,6 +5,7 @@ import com.ma.mobilebankingapp.domain.dto.AccountRequest;
 import com.ma.mobilebankingapp.domain.dto.BalanceUpdateRequest;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface AccountService {
@@ -18,6 +19,9 @@ public interface AccountService {
     AccountDto updateAccount(BalanceUpdateRequest updateRequest);
 
     ResponseEntity<List<AccountDto>> getAccounts(String customerUUID);
+
+
+    ResponseEntity<List<AccountDto>> getAccountsWithFiltering(String customerUUID, List<Long> currencyIds, Boolean isActive, LocalDate startDate, LocalDate finishDate);
 
 
 }

@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Builder
 @Entity
 @Where(clause = "is_deleted=false")
-@SQLDelete(sql = "update account set is_deleted=true where id=?")
+@SQLDelete(sql = "update account set is_deleted=1, is_active=0 where id_account=?")
 public class Account extends AbstractAudityEntity<String> {
 
     @Id
@@ -45,8 +45,6 @@ public class Account extends AbstractAudityEntity<String> {
         setActive(true);
         setDeleted(false);
     }
-
-
     @PreRemove
     private void preRemove(){
         this.isDeleted = true;

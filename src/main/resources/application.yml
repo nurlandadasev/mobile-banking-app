@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:sqlserver://localhost;databaseName=testShema
-    username: SA
-    password: Nurlan127
+    url: jdbc:sqlserver://${app.db.host};databaseName=${app.db.schema}
+    username: ${app.db.username}
+    password: ${app.db.password}
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
   jpa:
     show-sql: true
@@ -16,7 +16,7 @@ spring:
 
 app:
   db:
-    username: ${SERVICE_DB_USERNAME:root}
+    username: ${SERVICE_DB_USERNAME:SA}
     password: ${SERVICE_DB_PASSWORD:Nurlan127}
     host: ${SERVICE_DB_HOST:localhost}
     schema: ${SERVICE_DB_SCHEMA:testShema}

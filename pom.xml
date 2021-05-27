@@ -20,6 +20,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>5.3.20.Final</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
@@ -107,6 +113,11 @@
                             <version>2.4.1</version>
                         </path>
 
+                        <path>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpamodelgen</artifactId>
+                            <version>5.3.20.Final</version>
+                        </path>
                         <!-- other annotation processors -->
                     </annotationProcessorPaths>
                 </configuration>
