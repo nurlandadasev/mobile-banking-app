@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://localhost;databaseName=testShema
+    username: SA
+    password: Nurlan127
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.SQLServer2012Dialect
+    hibernate:
+      ddl-auto: create-drop
+
+
+
+
+
+app:
+  db:
+    username: ${SERVICE_DB_USERNAME:root}
+    password: ${SERVICE_DB_PASSWORD:Nurlan127}
+    host: ${SERVICE_DB_HOST:localhost}
+    schema: ${SERVICE_DB_SCHEMA:testShema}
+    port: ${SERVICE_DB_PORT:1433}
