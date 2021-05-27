@@ -2,6 +2,7 @@ package com.ma.mobilebankingapp.api;
 
 import com.ma.mobilebankingapp.domain.dto.AccountDto;
 import com.ma.mobilebankingapp.domain.dto.AccountRequest;
+import com.ma.mobilebankingapp.domain.dto.BalanceUpdateRequest;
 import com.ma.mobilebankingapp.services.impl.AccountServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/accounts")
 public class AccountController {
 
     private final AccountServiceImpl accountService;
@@ -25,8 +27,13 @@ public class AccountController {
 
 
     @PutMapping
-    public AccountDto updateAccount(@RequestBody AccountRequest accountRequest){
-        return accountService.updateAccount(accountRequest);
+    public AccountDto updateAccountBalance(@RequestBody BalanceUpdateRequest balanceUpdateRequest){
+        return accountService.updateAccount(balanceUpdateRequest);
+    }
+
+    @PutMapping("/{activeDeactivateAccount}/{active}")
+    public void activeInactiveAccount(@PathVariable String activeDeactivateAccount,@PathVariable Boolean active){
+        accountService.activeInactive(activeDeactivateAccount,active);
     }
 
 
@@ -34,6 +41,17 @@ public class AccountController {
     public ResponseEntity<List<AccountDto>> getAllAccountsForCustomer(@PathVariable String customerUUID){
         return accountService.getAccounts(customerUUID);
     }
+
+
+    @DeleteMapping("/{accountNumber}")
+    public void deleteAccount(@PathVariable String accountNumber){
+        accountService.deleteAccount(accountNumber);
+    }
+
+
+
+
+
 
 
 

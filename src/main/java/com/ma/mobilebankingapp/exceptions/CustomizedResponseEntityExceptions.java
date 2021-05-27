@@ -44,6 +44,14 @@ public class CustomizedResponseEntityExceptions extends ResponseEntityExceptionH
     }
 
 
+    @ExceptionHandler(BadRequestException.class)
+    public final ResponseEntity<Object> handleBadRequest(BadRequestException ex, WebRequest request){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+        log.error("BadRequestException body : {}",ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public final ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request){

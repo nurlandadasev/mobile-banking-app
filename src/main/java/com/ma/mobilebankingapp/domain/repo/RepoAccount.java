@@ -16,7 +16,9 @@ public interface RepoAccount extends JpaRepository<Account,Long> {
     Optional<Account> findByAccountNumber(String accountNumber);
 
 
-    @Query("select a from Account a where a.customer.customerUUID=:customerUUID")
+    @Query("select a from Account a inner join a.customer c where c.customerUUID=:customerUUID")
     Optional<List<Account>> findAccountsByCustomerUUID(@Param("customerUUID") String uuid);
+
+
 
 }

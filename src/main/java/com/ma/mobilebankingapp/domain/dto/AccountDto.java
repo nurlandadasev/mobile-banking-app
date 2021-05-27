@@ -18,5 +18,6 @@ public class AccountDto {
     private String currency;
     private boolean isActive;
     private Instant lastModifiedDate;
+    private Instant createdDate;
 
 }

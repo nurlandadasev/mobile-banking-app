@@ -25,8 +25,9 @@ public class Customer extends AbstractAudityEntity<String> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCustomer;
 
-    @Column(name = "UUID", unique = true, nullable = false, updatable = false)
-    private String customerUUID = UUID.randomUUID().toString().toUpperCase();
+
+    @Column(unique = true, updatable = false)
+    private String customerUUID;
 
     private String name;
     private String surname;
@@ -44,6 +45,11 @@ public class Customer extends AbstractAudityEntity<String> {
     @PreRemove
     private void preRemove() {
         this.isDeleted = false;
+    }
+
+    @PrePersist
+    private void prePersist(){
+        this.customerUUID = UUID.randomUUID().toString().toUpperCase();
     }
 
 }

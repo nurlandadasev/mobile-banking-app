@@ -33,7 +33,7 @@ public class Account extends AbstractAudityEntity<String> {
     private Currency currency;
 
     @JsonBackReference
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Customer customer;
 
     private boolean isDeleted;
