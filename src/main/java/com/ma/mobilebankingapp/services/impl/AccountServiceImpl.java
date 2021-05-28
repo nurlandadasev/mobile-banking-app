@@ -11,15 +11,11 @@ import com.ma.mobilebankingapp.exceptions.BadRequestException;
 import com.ma.mobilebankingapp.services.AccountService;
 import com.ma.mobilebankingapp.services.mappers.AccountMapper;
 import com.ma.mobilebankingapp.utilities.RandomNumber;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -27,15 +23,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class AccountServiceImpl implements AccountService {
+
 
     private final RepoAccount repoAccount;
     private final RepoCurrency repoCurrency;
     private final RepoCustomer repoCustomer;
     private final EntityManager entityManager;
 
+    public AccountServiceImpl(RepoAccount repoAccount, RepoCurrency repoCurrency, RepoCustomer repoCustomer, EntityManager entityManager) {
+        this.repoAccount = repoAccount;
+        this.repoCurrency = repoCurrency;
+        this.repoCustomer = repoCustomer;
+        this.entityManager = entityManager;
+    }
 
     @Override
     public AccountDto createAccount(AccountRequest accountRequest) {
@@ -93,14 +95,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<List<AccountDto>> getAccounts(String customerUUID) {
-        Optional<List<Account>> accountList = repoAccount.findAccountsByCustomerUUID(customerUUID);
-        return accountList.map(accounts -> new ResponseEntity<>(AccountMapper.INSTANCE.mapListToDtoList(accounts), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
+    public Optional<List<Account>> getAccounts(String customerUUID) {
+
+        return repoAccount.findAccountsByCustomerUUID(customerUUID);
     }
 
     @Override
-    public ResponseEntity<List<AccountDto>> getAccountsWithFiltering(String customerUUID, List<Long> currencyIds, Boolean isActive, LocalDate startDate, LocalDate finishDate) {
+    public Optional<List<AccountDto>> getAccountsWithFiltering(String customerUUID, List<Long> currencyIds, Boolean isActive, LocalDate startDate, LocalDate finishDate) {
         log.info("parameters: {},{},{},{},{}",customerUUID,currencyIds,isActive,startDate,finishDate);
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Account> cq = cb.createQuery(Account.class);
@@ -129,8 +130,7 @@ public class AccountServiceImpl implements AccountService {
 
         cq.orderBy(cb.desc(root.get(Account_.CREATED_DATE)));
         List<Account> resultList = entityManager.createQuery(cq).getResultList();
-        if (resultList != null && !resultList.isEmpty())
-            return new ResponseEntity<>(AccountMapper.INSTANCE.mapListToDtoList(resultList), HttpStatus.OK);
-        else return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+        return Optional.ofNullable(AccountMapper.INSTANCE.mapListToDtoList(resultList));
     }
 }

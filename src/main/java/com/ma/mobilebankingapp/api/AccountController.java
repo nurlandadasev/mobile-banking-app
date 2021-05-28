@@ -3,6 +3,7 @@ package com.ma.mobilebankingapp.api;
 import com.ma.mobilebankingapp.domain.dto.AccountDto;
 import com.ma.mobilebankingapp.domain.dto.AccountRequest;
 import com.ma.mobilebankingapp.domain.dto.BalanceUpdateRequest;
+import com.ma.mobilebankingapp.domain.entities.Account;
 import com.ma.mobilebankingapp.services.impl.AccountServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
 @Api(produces = "json", consumes = "json", tags = "Banking Controller")
 @RequestMapping("/accounts")
@@ -27,6 +26,9 @@ public class AccountController {
 
     private final AccountServiceImpl accountService;
 
+    public AccountController(AccountServiceImpl accountService) {
+        this.accountService = accountService;
+    }
 
     @ApiOperation(
             tags = "Banking Controller",
@@ -101,7 +103,9 @@ public class AccountController {
                                                                      @ApiParam(value = "Get by isActive. true false") @RequestParam(required = false) Boolean isActive,
                                                                      @ApiParam(value = "Date format: yyyy-mm-dd") @RequestParam(required = false) LocalDate startDate,
                                                                      @ApiParam(value = "Date format: yyyy-mm-dd") @RequestParam(required = false) LocalDate finishDate){
-    return accountService.getAccountsWithFiltering(customerUUID,currencyIds,isActive,startDate,finishDate);
+    return accountService.getAccountsWithFiltering(customerUUID,currencyIds,isActive,startDate,finishDate)
+            .map(accounts -> new ResponseEntity<>(accounts,HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(null,HttpStatus.NO_CONTENT));
     }
 
 
@@ -116,8 +120,10 @@ public class AccountController {
             @ApiResponse(responseCode = "204", content = @Content(schema = @Schema(implementation = AccountDto.class)), description = "No accounts found. Please create accounts and after return to this api.")
     })
     @GetMapping("/{customerUUID}")
-    public ResponseEntity<List<AccountDto>> getAllAccountsForCustomer(@PathVariable String customerUUID){
-        return accountService.getAccounts(customerUUID);
+    public ResponseEntity<List<Account>> getAllAccountsForCustomer(@PathVariable String customerUUID){
+        return accountService.getAccounts(customerUUID)
+                .map(accounts -> new ResponseEntity<>(accounts,HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null,HttpStatus.NO_CONTENT));
     }
 
 
