@@ -87,9 +87,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto updateAccount(BalanceUpdateRequest balanceUpdateRequest) {
         Account account = repoAccount.findByAccountNumber(balanceUpdateRequest.getAccountNumber())
                 .orElseThrow(() -> new BadRequestException("Account not found."));
-        BigDecimal balance = account.getBalance();
-        BigDecimal newBalance = balance.add(balanceUpdateRequest.getBalance());
-        account.setBalance(newBalance);
+        account.setBalance(balanceUpdateRequest.getBalance());
         repoAccount.save(account);
         return AccountMapper.INSTANCE.mapToDto(account);
     }
