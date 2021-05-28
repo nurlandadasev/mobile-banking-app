@@ -60,11 +60,15 @@ public class AccountServiceImpl implements AccountService {
         return repoCurrency.findById(idCurrency).orElseThrow(() -> new BadRequestException(String.format("Currency not found by this id: %s", idCurrency)));
     }
 
-    private String createAndSaveAccountNumber() {
-        String randomNumber = RandomNumber.generateRandomString(20);
-        if (repoAccount.findByAccountNumber(randomNumber).isPresent())
-            createAndSaveAccountNumber();
-
+    public String createAndSaveAccountNumber() {
+        boolean done  = true;
+        String randomNumber = null;
+        while(done) {
+            randomNumber = RandomNumber.generateRandomString(20);
+            if(!repoAccount.findByAccountNumber(randomNumber).isPresent()) {
+                done = false;
+            }
+        }
         return randomNumber;
     }
 
