@@ -65,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
         String randomNumber = null;
         while(done) {
             randomNumber = RandomNumber.generateRandomString(20);
-            if(!repoAccount.findByAccountNumber(randomNumber).isPresent()) {
+            if(repoAccount.findByAccountNumber(randomNumber).isEmpty()) {
                 done = false;
             }
         }
